@@ -144,7 +144,7 @@ struct ITseg {
 };
 
 struct Itmx {
-	//[0] is Min, [1] is Max, [2] is for Lazy Prop
+	/* [0] is Min, [1] is Max, [2] is for Lazy Prop */
 	int n;
 	vector <array<int, 3>> tree;
 
@@ -231,13 +231,15 @@ void solve() {
 	/*init IT*/
 	ITseg st_seg(n);
 
-	Itmx st_max(n);
+
+	Itmx st_max(n); /*<- let P be the prefix sum array of A, this will store maximum/minimum P[i] in range [L, R]*/
 	st_max.update(0, 0, 0);
 	for (int i = 1; i <= n; ++i) {
 		st_max.update(i, n, a[i]);
 		st_seg.update(i, a[i]);
 	}
 
+	/*tracking for k == 0*/
 	set <int> pos;
 	for (int i = 2; i <= n; ++i) {
 		if (a[i] != a[i - 1]) pos.insert(i);
@@ -274,6 +276,7 @@ void solve() {
 			}
 			Node x = st_seg.query(l, r);
 			if (k > 0) {
+				/* [0]: value, [1,2] = [L, R]*/
 				array <int, 3> ans = x.maxSeg;
 				if (k > ans[0]) cout << -1 << '\n';
 				else {
